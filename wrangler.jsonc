@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "barwaaqo-forum",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "barwaaqo-db",
+      "database_id": "2a11c1dc-58a9-4021-8faa-0fec79f19b08"
+    }
+  ]
+}
