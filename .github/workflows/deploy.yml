@@ -1,4 +1,4 @@
- name: Deploy to Cloudflare Workers
+name: Deploy to Cloudflare Workers
 
 on:
   push:
@@ -12,11 +12,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-
       - name: Install Dependencies
         run: npm install
 
@@ -25,4 +20,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
