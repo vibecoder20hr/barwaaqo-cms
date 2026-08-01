@@ -9,8 +9,14 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "barwaaqo-db",
+      "database_name": "barwaqo-db",
       "database_id": "2a11c1dc-58a9-4021-8faa-0fec79f19b08"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "barwaaqo-assets"
     }
   ]
 }
