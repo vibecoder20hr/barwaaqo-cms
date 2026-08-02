@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barwaqo Forum - Youth Leadership & Action Platform</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* Motion Animations Custom Rules */
+    .carousel-track { transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1); }
+
+    /* Scroll Reveal Motion Classes */
+    .reveal-item {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-item.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger Delays for Grid Motion */
+    .delay-1 { transition-delay: 0.1s; }
+    .delay-2 { transition-delay: 0.2s; }
+    .delay-3 { transition-delay: 0.3s; }
+    .delay-4 { transition-delay: 0.4s; }
+
+    /* Subtle Pulse Motion */
+    @keyframes subtlePulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.03); opacity: 1; }
+    }
+    .motion-pulse-subtle {
+      animation: subtlePulse 4s infinite ease-in-out;
+    }
+
+    /* Logo renders directly on the dark background - a subtle drop-shadow
+       keeps it legible without ever covering it with a solid fill. */
+    .logo-img {
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.35));
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-500 selection:text-white flex flex-col min-h-screen overflow-x-hidden">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 bg-[#031C16]/90 backdrop-blur-md border-b border-emerald-900/40 transition-all duration-300 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+
+      <!-- Brand Logo - flush left, no centering, no auto-margins -->
+      <a href="#" class="flex items-center group shrink-0" aria-label="Barwaqo Forum home">
+        <img src="/assets/logo.svg" alt="Barwaqo Forum Logo" class="logo-img h-9 sm:h-11 w-auto object-contain group-hover:scale-105 transition-all duration-300">
+      </a>
+
+      <!-- Desktop Links + CTA: right-aligned as one group -->
+      <div class="hidden md:flex items-center gap-6">
+        <nav class="flex items-center gap-6 font-semibold text-sm text-emerald-100/90">
+          <a href="#" class="hover:text-white hover:-translate-y-0.5 transition-all duration-200">Home</a>
+          <a href="#about" class="hover:text-white hover:-translate-y-0.5 transition-all duration-200">About Us</a>
+          <a href="#pillars" class="hover:text-white hover:-translate-y-0.5 transition-all duration-200">Programs</a>
+          <a href="#news" class="hover:text-white hover:-translate-y-0.5 transition-all duration-200">News & Blog</a>
+          <a href="#contact" class="hover:text-white hover:-translate-y-0.5 transition-all duration-200">Contact</a>
+        </nav>
+        <a href="#contact" class="px-5 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-md hover:shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all duration-300">
+          Get Involved
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button (holds every link on small screens) -->
+      <button id="menu-toggle" class="md:hidden p-2 rounded-lg text-emerald-100 hover:bg-white/10 active:scale-90 transition-all duration-200" aria-label="Toggle Menu">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+
+    </div>
+
+    <!-- Mobile Menu with Slide-down Motion -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-emerald-900/60 bg-[#031C16] px-4 pt-5 pb-6 space-y-3 transition-all duration-300">
+      <div class="flex justify-center pb-3">
+        <img src="/assets/logo.svg" alt="Barwaqo Forum Logo" class="logo-img h-11 w-auto object-contain">
+      </div>
+      <a href="#" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">Home</a>
+      <a href="#about" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">About Us</a>
+      <a href="#objectives" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">Objectives</a>
+      <a href="#pillars" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">What We Do</a>
+      <a href="#showcase" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">Showcase</a>
+      <a href="#news" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">News & Blog</a>
+      <a href="#values" class="block py-2 text-emerald-100 font-semibold border-b border-emerald-900/40 hover:pl-2 transition-all">Core Values</a>
+      <a href="#contact" class="block py-2 text-emerald-100 font-semibold hover:pl-2 transition-all">Contact Us</a>
+      <a href="#contact" class="block text-center bg-emerald-600 text-white py-3 rounded-full font-bold mt-2 hover:bg-emerald-500 transition-all">Get Involved</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-b from-[#031C16] via-[#043e2f] to-[#022c22] text-white pt-16 pb-24 overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+
+      <!-- Headline with Motion Scale -->
+      <h1 class="reveal-item text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-snug sm:leading-[1.15] mb-6 pt-4">
+        Empowering Youth, <br class="hidden sm:inline" />Building a Prosperous Future
+      </h1>
+
+      <!-- Description -->
+      <p class="reveal-item delay-1 text-sm sm:text-lg text-emerald-100/90 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+        Barwaqo Forum is a youth-led platform dedicated to empowering young people through education, leadership development, civic engagement, and sustainable community initiatives.
+      </p>
+
+      <!-- Action Buttons with Floating Motion -->
+      <div class="reveal-item delay-2 flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+        <a href="#about" class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white text-emerald-950 font-bold text-sm hover:bg-emerald-50 hover:-translate-y-1 hover:shadow-xl transition-all duration-300">
+          Explore Our Mission
+        </a>
+        <a href="#news" class="w-full sm:w-auto px-8 py-3.5 rounded-full border border-white/40 text-white font-semibold text-sm hover:bg-white/10 hover:-translate-y-1 transition-all duration-300 backdrop-blur-sm">
+          Latest News & Blog
+        </a>
+      </div>
+
+      <!-- MOTION CAROUSEL (Hero Interactive Slider) -->
+      <div id="carousel-container" class="reveal-item delay-3 relative w-full max-w-3xl mx-auto aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden border border-white/20 shadow-2xl group touch-pan-y motion-pulse-subtle hover:scale-[1.01] transition-all duration-500">
+
+        <!-- Track Slides -->
+        <div id="hero-carousel-track" class="carousel-track flex h-full w-full">
+
+          <!-- Slide 1 -->
+          <div class="w-full h-full flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80" alt="Youth Leadership Dialogue" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6 sm:p-10 text-left">
+              <p class="text-white text-sm sm:text-lg font-medium italic drop-shadow-md">
+                "Creating spaces where young leaders connect, innovate, and lead positive change."
+              </p>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="w-full h-full flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80" alt="Skills Workshop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6 sm:p-10 text-left">
+              <p class="text-white text-sm sm:text-lg font-medium italic drop-shadow-md">
+                "Empowering youth through practical skills, mentorship, and civic engagement."
+              </p>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="w-full h-full flex-shrink-0 relative overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80" alt="Community Action" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent flex items-end p-6 sm:p-10 text-left">
+              <p class="text-white text-sm sm:text-lg font-medium italic drop-shadow-md">
+                "Building sustainable community initiatives for tomorrow's generation."
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Controls: Prev & Next Arrows -->
+        <button id="carousel-prev" class="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/50 hover:bg-emerald-600 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 transition-all duration-300" aria-label="Previous Slide">
+          <i class="fa-solid fa-chevron-left text-base"></i>
+        </button>
+        <button id="carousel-next" class="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/50 hover:bg-emerald-600 text-white flex items-center justify-center backdrop-blur-md opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 transition-all duration-300" aria-label="Next Slide">
+          <i class="fa-solid fa-chevron-right text-base"></i>
+        </button>
+
+        <!-- Indicators (Dots) -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2.5">
+          <button class="dot w-4 h-1.5 rounded-full bg-white transition-all duration-300" data-slide="0" aria-label="Slide 1"></button>
+          <button class="dot w-1.5 h-1.5 rounded-full bg-white/50 transition-all duration-300" data-slide="1" aria-label="Slide 2"></button>
+          <button class="dot w-1.5 h-1.5 rounded-full bg-white/50 transition-all duration-300" data-slide="2" aria-label="Slide 3"></button>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6 reveal-item">
+          <span class="text-emerald-700 font-extrabold text-xs uppercase tracking-widest">Introduction</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Connecting Visionary Youth to Lead Positive Change
+          </h2>
+          <p class="text-slate-600 leading-relaxed text-base">
+            Barwaqo Forum is a youth-led platform dedicated to empowering Somali youth through knowledge, skills development, innovation, and community engagement. It was founded to create a space where young people can connect, grow, and lead positive change within their communities.
+          </p>
+          <p class="text-slate-600 leading-relaxed text-base">
+            The platform serves as a hub for learning, collaboration, creativity, and leadership. It aims to build a strong, visionary generation capable of contributing meaningfully to the social, economic, and developmental progress of the nation.
+          </p>
+        </div>
+
+        <!-- Vision & Mission Cards -->
+        <div class="space-y-6">
+          <div class="reveal-item delay-1 p-6 rounded-2xl bg-emerald-50/80 border border-emerald-100 hover:border-emerald-300 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-emerald-700 text-white rounded-xl flex items-center justify-center font-bold shadow-md">
+                <i class="fa-solid fa-eye"></i>
+              </div>
+              <h3 class="text-xl font-bold text-emerald-950">Vision</h3>
+            </div>
+            <p class="text-slate-700 text-sm leading-relaxed italic">
+              "To build a generation of empowered, skilled, and innovative youth capable of leading a prosperous and peaceful society."
+            </p>
+          </div>
+
+          <div class="reveal-item delay-2 p-6 rounded-2xl bg-emerald-50/80 border border-emerald-100 hover:border-emerald-300 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 bg-emerald-700 text-white rounded-xl flex items-center justify-center font-bold shadow-md">
+                <i class="fa-solid fa-bullseye"></i>
+              </div>
+              <h3 class="text-xl font-bold text-emerald-950">Mission</h3>
+            </div>
+            <p class="text-slate-700 text-sm leading-relaxed italic">
+              "To provide opportunities, training, and a platform for youth to develop their skills, advance their leadership potential, and serve their communities."
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Objectives Section -->
+  <section id="objectives" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div class="text-center max-w-3xl mx-auto space-y-3 reveal-item">
+        <span class="text-emerald-700 font-extrabold text-xs uppercase tracking-widest">Our Strategic Focus</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Core Objectives</h2>
+        <p class="text-slate-600 text-sm">Targeted goals driving the impact and expansion of Barwaqo Forum.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="reveal-item delay-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Unity & Collaboration</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Unite young people through a collaborative and interactive platform.</p>
+        </div>
+
+        <div class="reveal-item delay-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Skills Enhancement</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Enhance youth knowledge and practical skills for personal and professional growth.</p>
+        </div>
+
+        <div class="reveal-item delay-3 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Capacity Building</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Facilitate access to developmental opportunities, workshops, and capacity-building programs.</p>
+        </div>
+
+        <div class="reveal-item delay-1 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Entrepreneurship & Innovation</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Promote youth entrepreneurship, startup creation, and innovative thinking.</p>
+        </div>
+
+        <div class="reveal-item delay-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Community Welfare</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Support community development projects aimed at improving social welfare.</p>
+        </div>
+
+        <div class="reveal-item delay-3 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 space-y-3">
+          <div class="w-10 h-10 bg-emerald-100 text-emerald-800 rounded-xl flex items-center justify-center font-bold text-lg">
+            <i class="fa-solid fa-landmark"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Civic Engagement</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">Encourage youth participation in civic engagement, decision-making, and leadership roles.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What We Do (7 Strategic Pillars) -->
+  <section id="pillars" class="py-20 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div class="text-center max-w-3xl mx-auto space-y-3 reveal-item">
+        <span class="text-emerald-700 font-extrabold text-xs uppercase tracking-widest">Our Programmatic Scope</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">What Barwaqo Forum Does</h2>
+        <p class="text-slate-600 text-sm">Empowering youth through seven core programmatic areas.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Pillar Cards with Motion Effects -->
+        <div class="reveal-item delay-1 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">01. Skill Building</span>
+          <h3 class="text-lg font-bold text-slate-900">Skills Development & Training</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Trainings and workshops equipping youth with Leadership & Management, Public Speaking, ICT & Digital Literacy, Entrepreneurship, and Personal Development skills.
+          </p>
+        </div>
+
+        <div class="reveal-item delay-2 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">02. Connections</span>
+          <h3 class="text-lg font-bold text-slate-900">Youth Networking & Connections</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Creating opportunities to connect, collaborate, and build professional networks via networking events, peer learning sessions, and job/internship access.
+          </p>
+        </div>
+
+        <div class="reveal-item delay-3 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">03. Action Projects</span>
+          <h3 class="text-lg font-bold text-slate-900">Collaborative Youth Projects</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Community initiatives including peacebuilding, environmental protection, tree-planting drives, public health awareness, and educational support programs.
+          </p>
+        </div>
+
+        <div class="reveal-item delay-1 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">04. Business Growth</span>
+          <h3 class="text-lg font-bold text-slate-900">Entrepreneurship & Innovation</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Mentorship, startup management training, innovation contests, and connecting young founders with investors to drive job creation and economic empowerment.
+          </p>
+        </div>
+
+        <div class="reveal-item delay-2 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">05. Solutions Platform</span>
+          <h3 class="text-lg font-bold text-slate-900">Innovation & Idea Hub</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A platform for youth to pitch social solutions, explore research findings, and showcase creative projects that tackle societal challenges.
+          </p>
+        </div>
+
+        <div class="reveal-item delay-3 bg-slate-50 p-6 rounded-2xl border border-slate-200 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300 space-y-3">
+          <span class="text-xs font-black text-emerald-700 uppercase tracking-widest">06. Governance & Leadership</span>
+          <h3 class="text-lg font-bold text-slate-900">Leadership & Empowerment</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Development programs focusing on decision-making, community leadership, responsible citizenship, civic participation, and youth involvement in governance.
+          </p>
+        </div>
+      </div>
+
+      <!-- Pillar 7 -->
+      <div class="reveal-item bg-emerald-900 text-white p-8 rounded-3xl shadow-xl space-y-4 hover:shadow-2xl hover:scale-[1.005] transition-all duration-300">
+        <div class="flex items-center space-x-3">
+          <span class="px-3 py-1 bg-emerald-700 text-white rounded-md text-xs font-extrabold uppercase">07. Social Transformation & Advocacy</span>
+        </div>
+        <h3 class="text-2xl font-bold">Championing Positive Social Change</h3>
+        <p class="text-emerald-100 text-sm leading-relaxed max-w-4xl">
+          Barwaqo Forum advocates for youth rights, economic inclusion, and development by directly addressing pressing challenges such as youth unemployment, irregular migration, educational gaps, and community reconciliation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Showcase Section -->
+  <section id="showcase" class="py-20 bg-[#031C16] text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center max-w-2xl mx-auto mb-16 reveal-item">
+        <span class="text-xs font-bold tracking-widest text-emerald-400 uppercase">VISUAL HIGHLIGHTS</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">Community Action Showcase</h2>
+        <p class="text-emerald-100/80 text-sm sm:text-base">
+          Highlights of key events, book launches, and leadership engagements organized by Barwaqo Forum.
+        </p>
+        <div class="w-16 h-1 bg-emerald-500 rounded-full mx-auto mt-6"></div>
+      </div>
+
+      <!-- Grid Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Card 1 -->
+        <div class="reveal-item delay-1 rounded-2xl overflow-hidden bg-emerald-950/60 border border-emerald-800/40 group shadow-lg hover:border-emerald-500 hover:shadow-2xl transition-all duration-300">
+          <div class="aspect-video w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80" alt="Book Launch Event" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
+          </div>
+          <div class="p-6">
+            <span class="inline-block px-3 py-1 rounded-md bg-emerald-600/90 text-white text-xs font-bold mb-3">01. Book Exhibition & Dialogue</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">Book Launch: "Hardan iyo Hiigsi"</h3>
+            <p class="text-emerald-100/70 text-sm leading-relaxed">
+              Hundreds of young leaders and authors gathered at Jazeera Palace Hotel for an interactive book launch and policy discussion.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="reveal-item delay-2 rounded-2xl overflow-hidden bg-emerald-950/60 border border-emerald-800/40 group shadow-lg hover:border-emerald-500 hover:shadow-2xl transition-all duration-300">
+          <div class="aspect-video w-full overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Meeting with Government Officials" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out">
+          </div>
+          <div class="p-6">
+            <span class="inline-block px-3 py-1 rounded-md bg-emerald-600/90 text-white text-xs font-bold mb-3">02. Stakeholder Engagement</span>
+            <h3 class="text-xl font-bold text-white mb-2 group-hover:text-emerald-300 transition-colors">Government Leadership Consultation</h3>
+            <p class="text-emerald-100/70 text-sm leading-relaxed">
+              Barwaqo Forum delegation in high-level consultation meetings with senior policy makers and community leaders.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- NEWS & BLOG SECTION -->
+  <section id="news" class="py-20 bg-slate-50 border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 reveal-item">
+        <div class="space-y-3 max-w-2xl">
+          <span class="text-emerald-700 font-extrabold text-xs uppercase tracking-widest">INSIGHTS & ANNOUNCEMENTS</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Barwaqo Forum News & Blog</h2>
+          <p class="text-slate-600 text-sm">Stay updated with our latest workshops, policy research, community initiatives, and press releases.</p>
+        </div>
+
+        <!-- Category Filter Buttons -->
+        <div class="flex flex-wrap gap-2" id="blog-filters">
+          <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold bg-emerald-700 text-white transition-all duration-300 shadow-sm active:scale-95" data-category="all">All</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-emerald-500 hover:text-emerald-700 transition-all duration-300 active:scale-95" data-category="leadership">Leadership</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-emerald-500 hover:text-emerald-700 transition-all duration-300 active:scale-95" data-category="innovation">Innovation</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-emerald-500 hover:text-emerald-700 transition-all duration-300 active:scale-95" data-category="community">Community Action</button>
+        </div>
+      </div>
+
+      <!-- Blog Grid -->
+      <div class="grid md:grid-cols-3 gap-8" id="blog-grid">
+
+        <!-- Article 1 -->
+        <article class="reveal-item delay-1 blog-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group" data-category="leadership">
+          <div class="aspect-[16/10] w-full relative overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80" alt="Youth Leadership Summit" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-4 left-4 bg-emerald-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">Leadership</span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-2">
+              <div class="text-slate-400 text-xs font-semibold flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-emerald-600"></i>
+                <span>July 15, 2026</span>
+                <span>•</span>
+                <span>5 min read</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-emerald-700 transition-colors">
+                National Youth Leadership & Governance Summit 2026
+              </h3>
+              <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">
+                Barwaqo Forum hosted over 300 young leaders across regions to discuss civic engagement, decision-making roles, and driving sustainable development.
+              </p>
+            </div>
+            <button onclick="openBlogModal(1)" class="inline-flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 pt-2 group/btn">
+              Read Article <i class="fa-solid fa-arrow-right ml-1 group-hover/btn:translate-x-1.5 transition-transform duration-200"></i>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="reveal-item delay-2 blog-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group" data-category="innovation">
+          <div class="aspect-[16/10] w-full relative overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80" alt="Tech Hub Startup Mentorship" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-4 left-4 bg-emerald-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">Innovation</span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-2">
+              <div class="text-slate-400 text-xs font-semibold flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-emerald-600"></i>
+                <span>June 28, 2026</span>
+                <span>•</span>
+                <span>4 min read</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-emerald-700 transition-colors">
+                Empowering Youth Startups Through Digital Literacy & Mentorship
+              </h3>
+              <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">
+                Exploring how our Innovation & Idea Hub connects aspiring young founders with business mentors and digital training to accelerate economic growth.
+              </p>
+            </div>
+            <button onclick="openBlogModal(2)" class="inline-flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 pt-2 group/btn">
+              Read Article <i class="fa-solid fa-arrow-right ml-1 group-hover/btn:translate-x-1.5 transition-transform duration-200"></i>
+            </button>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="reveal-item delay-3 blog-card bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group" data-category="community">
+          <div class="aspect-[16/10] w-full relative overflow-hidden bg-slate-100">
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80" alt="Environmental Tree Planting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+            <span class="absolute top-4 left-4 bg-emerald-700 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-sm">Community Action</span>
+          </div>
+          <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+            <div class="space-y-2">
+              <div class="text-slate-400 text-xs font-semibold flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-emerald-600"></i>
+                <span>May 14, 2026</span>
+                <span>•</span>
+                <span>3 min read</span>
+              </div>
+              <h3 class="text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-emerald-700 transition-colors">
+                Green Somalia Initiative: Youth-Led Tree Planting & Cleanliness Campaign
+              </h3>
+              <p class="text-slate-600 text-xs leading-relaxed line-clamp-3">
+                Volunteers from Barwaqo Forum mobilized in Mogadishu for environmental sustainability, tree planting, and public sanitation campaigns.
+              </p>
+            </div>
+            <button onclick="openBlogModal(3)" class="inline-flex items-center text-xs font-bold text-emerald-700 hover:text-emerald-800 pt-2 group/btn">
+              Read Article <i class="fa-solid fa-arrow-right ml-1 group-hover/btn:translate-x-1.5 transition-transform duration-200"></i>
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- BLOG ARTICLE MODAL WITH FADE MOTION -->
+  <div id="blogModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity duration-300">
+    <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 relative shadow-2xl scale-95 transition-transform duration-300" id="blogModalBox">
+      <button onclick="closeBlogModal()" class="absolute top-6 right-6 text-slate-400 hover:text-slate-700 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center transition-all">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <div id="modalContent" class="space-y-4">
+        <!-- Content inserted dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Values Section -->
+  <section id="values" class="py-16 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12 reveal-item">
+        <span class="text-xs font-bold tracking-widest text-emerald-700 uppercase">OUR GUIDING PRINCIPLES</span>
+        <h2 class="text-3xl font-extrabold text-slate-900 mt-2">Core Values</h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="reveal-item delay-1 p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl font-bold shadow-sm">1</div>
+          <h3 class="text-lg font-bold text-slate-900">Innovation</h3>
+          <p class="text-xs text-slate-600">Driving creative and forward-thinking solutions for youth challenges.</p>
+        </div>
+
+        <div class="reveal-item delay-2 p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl font-bold shadow-sm">2</div>
+          <h3 class="text-lg font-bold text-slate-900">Transparency</h3>
+          <p class="text-xs text-slate-600">Upholding integrity, accountability, and openness in all operations.</p>
+        </div>
+
+        <div class="reveal-item delay-3 p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl font-bold shadow-sm">3</div>
+          <h3 class="text-lg font-bold text-slate-900">Progress</h3>
+          <p class="text-xs text-slate-600">Fostering continuous learning and sustainable development for all.</p>
+        </div>
+
+        <div class="reveal-item delay-4 p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-2 hover:border-emerald-400 hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+          <div class="w-12 h-12 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto text-xl font-bold shadow-sm">4</div>
+          <h3 class="text-lg font-bold text-slate-900">Social Responsibility</h3>
+          <p class="text-xs text-slate-600">Dedicated to serving communities and promoting peace and welfare.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Form & Official Info Section -->
+  <section id="contact" class="py-20 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <div class="text-center max-w-3xl mx-auto space-y-3 reveal-item">
+        <span class="text-emerald-700 font-extrabold text-xs uppercase tracking-widest">Get In Touch</span>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Contact Barwaqo Forum</h2>
+        <p class="text-slate-600 text-sm">Have inquiries, partnership proposals, or want to join us? Reach out directly.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8 items-start">
+        <!-- Official Direct Info -->
+        <div class="reveal-item delay-1 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6 lg:col-span-1 hover:shadow-md transition-all">
+          <h3 class="text-xl font-bold text-slate-900">Contact Details</h3>
+          <div class="space-y-4">
+            <div class="flex items-start space-x-4">
+              <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-location-dot"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase">Office Location</h4>
+                <p class="text-sm font-semibold text-slate-800">Hodan, Banadir, Mogadishu, Somalia</p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-4">
+              <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-phone"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase">Phone / WhatsApp</h4>
+                <p class="text-sm font-semibold text-slate-800">
+                  <a href="tel:+252610387144" class="hover:text-emerald-700">+252 610 38 71 44</a>
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-start space-x-4">
+              <div class="w-10 h-10 bg-emerald-50 text-emerald-700 rounded-xl flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-envelope"></i>
+              </div>
+              <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase">Email Address</h4>
+                <p class="text-sm font-semibold text-slate-800">
+                  <a href="mailto:info@barwaqoforum.org" class="hover:text-emerald-700">info@barwaqoforum.org</a>
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <hr class="border-slate-100">
+
+          <!-- Official Social Channels -->
+          <div class="space-y-3">
+            <h4 class="text-xs font-bold text-slate-400 uppercase">Follow Our Official Channels</h4>
+            <div class="flex items-center space-x-3">
+              <a href="https://facebook.com/BarwaqoForum" target="_blank" rel="noopener" class="w-10 h-10 bg-slate-100 hover:bg-emerald-700 hover:text-white hover:scale-110 rounded-xl flex items-center justify-center text-slate-600 transition-all duration-200" title="Facebook (@BarwaqoForum)">
+                <i class="fa-brands fa-facebook-f"></i>
+              </a>
+              <a href="https://tiktok.com/@BarwaqoForum" target="_blank" rel="noopener" class="w-10 h-10 bg-slate-100 hover:bg-emerald-700 hover:text-white hover:scale-110 rounded-xl flex items-center justify-center text-slate-600 transition-all duration-200" title="TikTok (@BarwaqoForum)">
+                <i class="fa-brands fa-tiktok"></i>
+              </a>
+              <a href="https://x.com/BarwaqoForum" target="_blank" rel="noopener" class="w-10 h-10 bg-slate-100 hover:bg-emerald-700 hover:text-white hover:scale-110 rounded-xl flex items-center justify-center text-slate-600 transition-all duration-200" title="X / Twitter (@BarwaqoForum)">
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
+              <a href="mailto:info@barwaqoforum.org" class="w-10 h-10 bg-slate-100 hover:bg-emerald-700 hover:text-white hover:scale-110 rounded-xl flex items-center justify-center text-slate-600 transition-all duration-200" title="Email Us">
+                <i class="fa-solid fa-envelope"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Contact Form -->
+        <form id="contactForm" class="reveal-item delay-2 bg-white p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4 lg:col-span-2">
+          <!-- Honeypot Validation Field -->
+          <input type="text" name="website" id="cWebsite" class="hidden" tabindex="-1" autocomplete="off">
+
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
+              <input type="text" id="cName" required placeholder="John Doe" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address</label>
+              <input type="email" id="cEmail" required placeholder="john@example.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Message</label>
+            <textarea id="cMessage" rows="5" required placeholder="Write your inquiry or message here..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition-all"></textarea>
+          </div>
+
+          <button type="submit" id="cSubmitBtn" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold py-4 rounded-xl transition-all shadow-md hover:shadow-emerald-200 hover:scale-[1.01] active:scale-95">
+            Send Message
+          </button>
+
+          <div id="cStatus" class="text-center text-sm font-semibold hidden"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Clean Modern Footer -->
+  <footer class="bg-[#031C16] text-emerald-100/80 pt-16 pb-12 border-t border-emerald-900/40 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+
+        <!-- Col 1: Brand -->
+        <div>
+          <div class="mb-4">
+            <img src="/assets/logo.svg" alt="Barwaqo Forum Logo" class="logo-img h-11 w-auto object-contain">
+          </div>
+          <p class="text-xs text-emerald-200/70 leading-relaxed">
+            Barwaqo Forum is committed to empowering youth through sustainable development, leadership training, innovation, and community action.
+          </p>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div>
+          <h4 class="font-bold text-sm uppercase tracking-wider text-white mb-4">Navigation</h4>
+          <ul class="space-y-2.5 text-xs sm:text-sm font-medium">
+            <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="#objectives" class="hover:text-white transition-colors">Strategic Objectives</a></li>
+            <li><a href="#pillars" class="hover:text-white transition-colors">What We Do</a></li>
+            <li><a href="#showcase" class="hover:text-white transition-colors">Community Showcase</a></li>
+            <li><a href="#news" class="hover:text-white transition-colors">News & Blog</a></li>
+            <li><a href="#values" class="hover:text-white transition-colors">Core Values</a></li>
+            <li><a href="#contact" class="hover:text-white transition-colors">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Policies -->
+        <div>
+          <h4 class="font-bold text-sm uppercase tracking-wider text-white mb-4">Policies</h4>
+          <ul class="space-y-2.5 text-xs sm:text-sm font-medium">
+            <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Connect & Social -->
+        <div>
+          <h4 class="font-bold text-sm uppercase tracking-wider text-white mb-4">Connect With Us</h4>
+          <div class="flex items-center gap-3 mb-4">
+            <a href="https://facebook.com/BarwaqoForum" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-emerald-900/60 hover:bg-emerald-600 hover:scale-110 text-white flex items-center justify-center transition-all duration-200 border border-emerald-800/40" title="Facebook">
+              <i class="fa-brands fa-facebook-f text-sm"></i>
+            </a>
+            <a href="https://tiktok.com/@BarwaqoForum" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-emerald-900/60 hover:bg-emerald-600 hover:scale-110 text-white flex items-center justify-center transition-all duration-200 border border-emerald-800/40" title="TikTok">
+              <i class="fa-brands fa-tiktok text-sm"></i>
+            </a>
+            <a href="https://x.com/BarwaqoForum" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-emerald-900/60 hover:bg-emerald-600 hover:scale-110 text-white flex items-center justify-center transition-all duration-200 border border-emerald-800/40" title="X / Twitter">
+              <i class="fa-brands fa-x-twitter text-sm"></i>
+            </a>
+            <a href="mailto:info@barwaqoforum.org" class="w-9 h-9 rounded-lg bg-emerald-900/60 hover:bg-emerald-600 hover:scale-110 text-white flex items-center justify-center transition-all duration-200 border border-emerald-800/40" title="Email">
+              <i class="fa-solid fa-envelope text-sm"></i>
+            </a>
+          </div>
+          <p class="text-xs text-emerald-300">Email: <a href="mailto:info@barwaqoforum.org" class="underline hover:text-white">info@barwaqoforum.org</a></p>
+          <p class="text-xs text-emerald-300 mt-1">Phone: <a href="tel:+252610387144" class="underline hover:text-white">+252 610 38 71 44</a></p>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-emerald-900/60 text-center text-xs text-emerald-300/60">
+        © 2026 Barwaqo Forum. All Rights Reserved. | Hodan, Banadir, Mogadishu, Somalia
+      </div>
+    </div>
+  </footer>
+
+  <!-- Motion Scripts & Interactive Logic -->
+  <script>
+    // Blog Posts Data
+    var blogPosts = {
+      1: {
+        category: "Leadership",
+        date: "July 15, 2026",
+        title: "National Youth Leadership & Governance Summit 2026",
+        image: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80",
+        content:
+          '<p class="text-slate-600 text-sm leading-relaxed">Barwaqo Forum successfully convened the 2026 Youth Leadership & Governance Summit, bringing together over 300 young leaders, policy experts, and community advocates across multiple regions.</p>' +
+          '<p class="text-slate-600 text-sm leading-relaxed">The summit focused on expanding civic participation, building institutional capacities among young people, and establishing structured dialogue channels between youth groups and governance bodies.</p>' +
+          '<h4 class="font-bold text-slate-900 text-base pt-2">Key Summit Resolutions:</h4>' +
+          '<ul class="list-disc list-inside text-xs text-slate-600 space-y-1 pl-2">' +
+            '<li>Establishment of regional youth policy advisory committees.</li>' +
+            '<li>Launch of nationwide leadership mentorship circles.</li>' +
+            '<li>Commitment to continuous civic education workshops in universities.</li>' +
+          '</ul>'
+      },
+      2: {
+        category: "Innovation",
+        date: "June 28, 2026",
+        title: "Empowering Youth Startups Through Digital Literacy & Mentorship",
+        image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
+        content:
+          '<p class="text-slate-600 text-sm leading-relaxed">Through our <strong>Innovation & Idea Hub</strong>, Barwaqo Forum has empowered over 50 early-stage youth entrepreneurs by providing access to business incubation, technical ICT workshops, and investor pitch sessions.</p>' +
+          '<p class="text-slate-600 text-sm leading-relaxed">In today\\'s fast-moving economy, this program equips young founders with tools in digital marketing, financial management, and sustainable business modeling to foster job creation and reduce youth unemployment.</p>'
+      },
+      3: {
+        category: "Community Action",
+        date: "May 14, 2026",
+        title: "Green Somalia Initiative: Youth-Led Tree Planting & Cleanliness Campaign",
+        image: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80",
+        content:
+          '<p class="text-slate-600 text-sm leading-relaxed">Dozens of enthusiastic youth volunteers from Barwaqo Forum took part in a multi-district environmental cleanup and tree-planting drive across key public avenues in Mogadishu.</p>' +
+          '<p class="text-slate-600 text-sm leading-relaxed">This campaign highlights our commitment to social responsibility and environmental protection, encouraging active citizenship and youth-driven community stewardship.</p>'
+      }
+    };
+
+    function openBlogModal(id) {
+      var post = blogPosts[id];
+      if (!post) return;
+      var modal = document.getElementById('blogModal');
+      var modalBox = document.getElementById('blogModalBox');
+      var container = document.getElementById('modalContent');
+
+      container.innerHTML =
+        '<span class="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 text-xs font-bold rounded-full uppercase">' + post.category + '</span>' +
+        '<div class="text-slate-400 text-xs font-semibold">' + post.date + '</div>' +
+        '<h3 class="text-2xl font-extrabold text-slate-900 tracking-tight">' + post.title + '</h3>' +
+        '<div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-100">' +
+          '<img src="' + post.image + '" class="w-full h-full object-cover">' +
+        '</div>' +
+        '<div class="space-y-3">' + post.content + '</div>';
+
+      modal.classList.remove('hidden');
+      setTimeout(function () {
+        modalBox.classList.remove('scale-95');
+        modalBox.classList.add('scale-100');
+      }, 10);
+    }
+
+    function closeBlogModal() {
+      var modal = document.getElementById('blogModal');
+      var modalBox = document.getElementById('blogModalBox');
+      modalBox.classList.remove('scale-100');
+      modalBox.classList.add('scale-95');
+      setTimeout(function () {
+        modal.classList.add('hidden');
+      }, 200);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // Intersection Observer for Scroll Motion Reveal
+      var observerOptions = {
+        root: null,
+        rootMargin: '0px 0px -50px 0px',
+        threshold: 0.15
+      };
+
+      var revealObserver = new IntersectionObserver(function (entries, observer) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('.reveal-item').forEach(function (el) { revealObserver.observe(el); });
+
+      // Mobile Navigation Toggle
+      var menuToggle = document.getElementById('menu-toggle');
+      var mobileMenu = document.getElementById('mobile-menu');
+      if (menuToggle && mobileMenu) {
+        menuToggle.addEventListener('click', function () {
+          mobileMenu.classList.toggle('hidden');
+        });
+      }
+
+      // Close the mobile menu automatically after a link is tapped
+      if (mobileMenu) {
+        mobileMenu.querySelectorAll('a').forEach(function (link) {
+          link.addEventListener('click', function () {
+            mobileMenu.classList.add('hidden');
+          });
+        });
+      }
+
+      // Blog Filtering Logic
+      var filterBtns = document.querySelectorAll('.filter-btn');
+      var blogCards = document.querySelectorAll('.blog-card');
+
+      filterBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          filterBtns.forEach(function (b) {
+            b.classList.remove('bg-emerald-700', 'text-white');
+            b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+          });
+          btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+          btn.classList.add('bg-emerald-700', 'text-white');
+
+          var category = btn.getAttribute('data-category');
+          blogCards.forEach(function (card) {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Carousel Logic
+      var track = document.getElementById('hero-carousel-track');
+      var dots = document.querySelectorAll('.dot');
+      var prevBtn = document.getElementById('carousel-prev');
+      var nextBtn = document.getElementById('carousel-next');
+      var container = document.getElementById('carousel-container');
+
+      var currentIndex = 0;
+      var totalSlides = 3;
+      var autoSlideInterval;
+
+      function updateCarousel(index) {
+        currentIndex = index;
+        track.style.transform = 'translateX(-' + (currentIndex * 100) + '%)';
+        dots.forEach(function (dot, idx) {
+          if (idx === currentIndex) {
+            dot.classList.remove('w-1.5', 'bg-white/50');
+            dot.classList.add('w-4', 'bg-white');
+          } else {
+            dot.classList.remove('w-4', 'bg-white');
+            dot.classList.add('w-1.5', 'bg-white/50');
+          }
+        });
+      }
+
+      function nextSlide() {
+        var nextIdx = (currentIndex + 1) % totalSlides;
+        updateCarousel(nextIdx);
+      }
+
+      function prevSlide() {
+        var prevIdx = (currentIndex - 1 + totalSlides) % totalSlides;
+        updateCarousel(prevIdx);
+      }
+
+      if (nextBtn) nextBtn.addEventListener('click', function () { nextSlide(); resetTimer(); });
+      if (prevBtn) prevBtn.addEventListener('click', function () { prevSlide(); resetTimer(); });
+
+      dots.forEach(function (dot, idx) {
+        dot.addEventListener('click', function () {
+          updateCarousel(idx);
+          resetTimer();
+        });
+      });
+
+      function startTimer() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+      }
+
+      function resetTimer() {
+        clearInterval(autoSlideInterval);
+        startTimer();
+      }
+
+      // Touch Swipe Support
+      var touchStartX = 0;
+      var touchEndX = 0;
+
+      if (container) {
+        container.addEventListener('touchstart', function (e) {
+          touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        container.addEventListener('touchend', function (e) {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        }, { passive: true });
+      }
+
+      function handleSwipe() {
+        var swipeThreshold = 50;
+        if (touchEndX < touchStartX - swipeThreshold) {
+          nextSlide();
+          resetTimer();
+        }
+        if (touchEndX > touchStartX + swipeThreshold) {
+          prevSlide();
+          resetTimer();
+        }
+      }
+
+      startTimer();
+
+      // Contact Form Handler
+      var contactForm = document.getElementById('contactForm');
+      if (contactForm) {
+        contactForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var status = document.getElementById('cStatus');
+          var submitBtn = document.getElementById('cSubmitBtn');
+          status.classList.remove('hidden', 'text-red-600', 'text-emerald-600');
+          status.classList.add('text-slate-600');
+          status.innerText = 'Submitting message...';
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-60', 'cursor-not-allowed');
+
+          fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: document.getElementById('cName').value,
+              email: document.getElementById('cEmail').value,
+              message: document.getElementById('cMessage').value,
+              website: document.getElementById('cWebsite').value
+            })
+          })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+              if (data.success) {
+                status.classList.remove('text-slate-600');
+                status.classList.add('text-emerald-600');
+                status.innerText = data.message || 'Thank you! Your message has been received.';
+                contactForm.reset();
+              } else {
+                status.classList.remove('text-slate-600');
+                status.classList.add('text-red-600');
+                status.innerText = data.message || 'Error submitting form.';
+              }
+            })
+            .catch(function () {
+              status.classList.remove('text-slate-600');
+              status.classList.add('text-red-600');
+              status.innerText = 'Network error. Please try again in a moment.';
+            })
+            .finally(function () {
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+            });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
