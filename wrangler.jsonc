@@ -1,16 +1,20 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "barwaaqo-cms",
+  "name": "barwaqo-forum",
   "main": "src/index.js",
-  "compatibility_date": "2024-09-01",
+  "compatibility_date": "2025-01-01",
   "assets": {
     "directory": "./public"
   },
-  "d1_databases": [
+  "kv_namespaces": [
     {
-      "binding": "DB",
-      "database_name": "barwaqo-db",
-      "database_id": "2a11c1dc-58a9-4021-8faa-0fec79f19b08"
+      "binding": "RATE_LIMIT_KV",
+      "id": "d5ff9775accf41d68bfdeb25b42e2433"
     }
-  ]
+  ],
+  "vars": {
+    "CONTACT_TO_EMAIL": "info@barwaqoforum.org",
+    "CONTACT_FROM_EMAIL": "Barwaqo Forum <info@barwaqoforum.org>",
+    "ALLOWED_ORIGIN": "https://barwaqoforum.org"
+  }
 }

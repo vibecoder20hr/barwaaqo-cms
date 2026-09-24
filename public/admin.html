@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barwaqo Forum — Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  body { font-family: 'Segoe UI', Arial, sans-serif; }
+  .brand-dark { background-color: #0F231A; }
+  .brand-green { background-color: #008751; }
+  .tab-active { background-color: #008751; color: white; }
+</style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+<!-- ======================= CONFIG =======================
+     Matches the REAL production Supabase project schema:
+     site_sections, articles, gallery_items, contact_messages,
+     media_library, admin_users + is_admin(). This is the anon/
+     publishable key — safe to expose; RLS enforces is_admin(). -->
+<script>
+  const SUPABASE_URL = 'https://nlwzslevdjjrrjjqmsbb.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_UxJd2xzC8br08UCePz3ufQ_UPJY4v81';
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const MEDIA_BUCKET = 'media';
+</script>
+
+<!-- ======================= LOGIN SCREEN ======================= -->
+<div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-sm bg-white rounded-2xl shadow-lg p-8">
+    <h1 class="text-xl font-bold mb-1" style="color:#0F231A">Barwaqo Forum</h1>
+    <p class="text-sm text-gray-500 mb-6">Admin Dashboard Login</p>
+    <form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold mb-1">Email</label>
+        <input type="email" id="loginEmail" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-600">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-1">Password</label>
+        <input type="password" id="loginPassword" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 outline-none focus:ring-2 focus:ring-green-600">
+      </div>
+      <button type="submit" class="w-full brand-green text-white font-bold py-2.5 rounded-lg hover:opacity-90">Log In</button>
+      <p id="loginError" class="hidden text-red-600 text-sm text-center"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ======================= DASHBOARD ======================= -->
+<div id="dashboard" class="hidden">
+  <header class="brand-dark text-white px-6 py-4 flex items-center justify-between">
+    <h1 class="font-bold">Barwaqo Forum — Admin</h1>
+    <div class="flex items-center gap-4">
+      <span id="userEmail" class="text-sm text-gray-300"></span>
+      <button id="logoutBtn" class="text-sm bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg">Log Out</button>
+    </div>
+  </header>
+
+  <div class="flex flex-col sm:flex-row">
+    <nav class="sm:w-52 shrink-0 bg-white border-r border-gray-200 p-3 flex sm:flex-col gap-1 overflow-x-auto">
+      <button data-tab="messages" class="tab-btn text-left px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap">Messages</button>
+      <button data-tab="sections" class="tab-btn text-left px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap">Site Content</button>
+      <button data-tab="gallery" class="tab-btn text-left px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap">Showcase / Gallery</button>
+      <button data-tab="articles" class="tab-btn text-left px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap">Blog / Articles</button>
+      <button data-tab="media" class="tab-btn text-left px-4 py-2.5 rounded-lg font-semibold text-sm whitespace-nowrap">Media Library</button>
+    </nav>
+
+    <main class="flex-1 p-4 sm:p-8 max-w-5xl">
+
+      <!-- MESSAGES -->
+      <section id="tab-messages" class="tab-section hidden">
+        <h2 class="text-lg font-bold mb-4">Contact Messages</h2>
+        <div id="messagesList" class="space-y-3"></div>
+      </section>
+
+      <!-- SITE CONTENT (site_sections: hero / about / community_action / contact / footer) -->
+      <section id="tab-sections" class="tab-section hidden">
+        <h2 class="text-lg font-bold mb-4">Site Content</h2>
+        <p class="text-sm text-gray-500 mb-4">Each block below is one row in <code>site_sections</code>. Fields shown are the keys the public website actually reads.</p>
+        <div id="sectionsList" class="space-y-4 max-w-2xl"></div>
+      </section>
+
+      <!-- GALLERY / SHOWCASE -->
+      <section id="tab-gallery" class="tab-section hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold">Community Action Showcase</h2>
+          <button id="newGalleryBtn" class="brand-green text-white text-sm font-bold px-4 py-2 rounded-lg">+ New Item</button>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">These populate the homepage carousel, in <code>sort_order</code>. Inactive items are hidden from the public site but not deleted.</p>
+        <div id="galleryList" class="space-y-3"></div>
+      </section>
+
+      <!-- ARTICLES / BLOG -->
+      <section id="tab-articles" class="tab-section hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold">Blog / Articles</h2>
+          <button id="newArticleBtn" class="brand-green text-white text-sm font-bold px-4 py-2 rounded-lg">+ New Article</button>
+        </div>
+        <div id="articlesList" class="space-y-3"></div>
+      </section>
+
+      <!-- MEDIA LIBRARY -->
+      <section id="tab-media" class="tab-section hidden">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold">Media Library</h2>
+          <label class="brand-green text-white text-sm font-bold px-4 py-2 rounded-lg cursor-pointer">
+            + Upload Image
+            <input type="file" id="mediaUploadInput" accept="image/*" class="hidden">
+          </label>
+        </div>
+        <p class="text-sm text-gray-500 mb-4">Uploads go to the <code>media</code> Storage bucket and are tracked here. Copy a file's path to use it in Hero / Gallery / Article image fields.</p>
+        <div id="mediaGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Generic item editor modal (used for gallery / articles) -->
+<div id="modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6 max-h-[90vh] overflow-y-auto">
+    <h3 id="modalTitle" class="text-lg font-bold mb-4">Edit</h3>
+    <div id="modalBody" class="space-y-3"></div>
+    <div class="flex justify-end gap-2 mt-5">
+      <button id="modalCancel" class="px-4 py-2 rounded-lg border">Cancel</button>
+      <button id="modalSave" class="px-4 py-2 rounded-lg brand-green text-white font-bold">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= AUTH ================= */
+const loginScreen = document.getElementById('loginScreen');
+const dashboard = document.getElementById('dashboard');
+
+async function checkSession() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session) {
+    loginScreen.classList.add('hidden');
+    dashboard.classList.remove('hidden');
+    document.getElementById('userEmail').textContent = session.user.email;
+    initDashboard();
+  } else {
+    loginScreen.classList.remove('hidden');
+    dashboard.classList.add('hidden');
+  }
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errBox = document.getElementById('loginError');
+  errBox.classList.add('hidden');
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) {
+    errBox.textContent = error.message;
+    errBox.classList.remove('hidden');
+    return;
+  }
+  checkSession();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  location.reload();
+});
+
+checkSession();
+
+/* ================= TABS ================= */
+let dashboardInitialized = false;
+function initDashboard() {
+  document.querySelectorAll('.tab-btn').forEach((btn) => {
+    btn.addEventListener('click', () => showTab(btn.dataset.tab));
+  });
+  showTab('messages');
+  if (!dashboardInitialized) {
+    dashboardInitialized = true;
+    loadMessages();
+    loadSections();
+    loadGallery();
+    loadArticles();
+    loadMedia();
+  }
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab-section').forEach((s) => s.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach((b) => b.classList.toggle('tab-active', b.dataset.tab === tab));
+}
+
+function publicUrl(path) {
+  if (!path) return '';
+  return supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+async function uploadFile(file, folder) {
+  const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+  const path = `${folder}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(path, file, { upsert: false });
+  if (error) throw error;
+  // Track it in media_library too, so it shows up in the Media Library tab.
+  const { data: { session } } = await supabase.auth.getSession();
+  await supabase.from('media_library').insert({
+    file_path: path,
+    public_url: publicUrl(path),
+    alt_text: file.name,
+    uploaded_by: session?.user?.id || null,
+  });
+  return path;
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+/* ================= MESSAGES (contact_messages) ================= */
+async function loadMessages() {
+  const box = document.getElementById('messagesList');
+  box.innerHTML = 'Loading...';
+  const { data, error } = await supabase.from('contact_messages').select('*').order('created_at', { ascending: false });
+  if (error) { box.innerHTML = `<p class="text-red-600">${escapeHtml(error.message)}</p>`; return; }
+  if (!data.length) { box.innerHTML = '<p class="text-gray-500">No messages yet.</p>'; return; }
+  box.innerHTML = data.map((m) => `
+    <div class="bg-white rounded-xl shadow-sm p-4 border-l-4 ${m.status === 'new' ? 'border-green-600' : 'border-gray-200'}">
+      <div class="flex justify-between items-start flex-wrap gap-2">
+        <div>
+          <p class="font-bold">${escapeHtml(m.name)} <span class="font-normal text-gray-500">&lt;${escapeHtml(m.email)}&gt;</span></p>
+          <p class="text-sm text-gray-700 mt-1">${escapeHtml(m.subject || '(no subject)')}</p>
+        </div>
+        <select data-id="${m.id}" class="statusSelect text-xs border rounded-lg px-2 py-1">
+          ${['new','read','replied','archived'].map((s) => `<option value="${s}" ${s === m.status ? 'selected' : ''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <p class="text-sm mt-2 whitespace-pre-wrap">${escapeHtml(m.message)}</p>
+      <p class="text-xs text-gray-400 mt-2">${new Date(m.created_at).toLocaleString()} · Email ${m.email_sent ? 'sent ✓' : 'NOT sent ✗'}</p>
+    </div>
+  `).join('');
+  box.querySelectorAll('.statusSelect').forEach((sel) => {
+    sel.addEventListener('change', async () => {
+      await supabase.from('contact_messages').update({ status: sel.value }).eq('id', sel.dataset.id);
+      loadMessages();
+    });
+  });
+}
+
+/* ================= SITE CONTENT (site_sections) ================= */
+// Field maps per section_key — matches exactly what index.html reads.
+const SECTION_FIELDS = {
+  hero: [
+    ['title', 'Title', 'text'],
+    ['subtitle', 'Description', 'textarea'],
+    ['quote_text', 'Quote (on hero photo)', 'text'],
+    ['cta_text', 'Button text', 'text'],
+    ['cta_link', 'Button link', 'text'],
+    ['image_path', 'Hero image (Storage path, e.g. hero/xxx.jpg)', 'text'],
+  ],
+  about: [
+    ['heading', 'Heading', 'text'],
+    ['paragraph_1', 'Intro paragraph', 'textarea'],
+    ['paragraph_2', 'Second paragraph', 'textarea'],
+    ['vision', 'Vision statement', 'textarea'],
+    ['mission', 'Mission statement', 'textarea'],
+  ],
+  community_action: [
+    ['heading', 'Heading', 'text'],
+    ['subtitle', 'Subtitle', 'textarea'],
+  ],
+  contact: [
+    ['email', 'Email', 'text'],
+    ['phone', 'Phone', 'text'],
+    ['address', 'Address', 'text'],
+  ],
+  footer: [
+    ['copyright', 'Copyright line', 'text'],
+  ],
+};
+
+async function loadSections() {
+  const box = document.getElementById('sectionsList');
+  box.innerHTML = 'Loading...';
+  const { data, error } = await supabase.from('site_sections').select('*').order('section_key');
+  if (error) { box.innerHTML = `<p class="text-red-600">${escapeHtml(error.message)}</p>`; return; }
+  box.innerHTML = data.map((row) => {
+    const fields = SECTION_FIELDS[row.section_key] || [];
+    const content = row.content || {};
+    return `
+      <div class="bg-white rounded-xl shadow-sm p-5">
+        <h3 class="font-bold mb-3">${escapeHtml(row.label || row.section_key)}</h3>
+        <form class="sectionForm space-y-3" data-key="${escapeHtml(row.section_key)}">
+          ${fields.map(([key, label, type]) => `
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">${label}</label>
+              ${type === 'textarea'
+                ? `<textarea data-field="${key}" rows="2" class="w-full px-3 py-2 border rounded-lg text-sm">${escapeHtml(content[key] || '')}</textarea>`
+                : `<input data-field="${key}" class="w-full px-3 py-2 border rounded-lg text-sm" value="${escapeHtml(content[key] || '')}">`}
+            </div>
+          `).join('')}
+          <button type="submit" class="brand-green text-white text-sm font-bold px-4 py-2 rounded-lg">Save</button>
+          <span class="saveMsg text-xs text-green-700 ml-2"></span>
+        </form>
+      </div>`;
+  }).join('');
+
+  box.querySelectorAll('.sectionForm').forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const key = form.dataset.key;
+      const msg = form.querySelector('.saveMsg');
+      const content = {};
+      form.querySelectorAll('[data-field]').forEach((el) => { content[el.dataset.field] = el.value; });
+      // Merge rather than overwrite, in case a section has keys not shown here.
+      const { data: existing } = await supabase.from('site_sections').select('content').eq('section_key', key).maybeSingle();
+      const merged = { ...(existing?.content || {}), ...content };
+      const { error } = await supabase.from('site_sections').update({ content: merged, updated_at: new Date().toISOString() }).eq('section_key', key);
+      msg.textContent = error ? error.message : 'Saved ✓';
+      msg.className = error ? 'text-red-600 text-xs ml-2' : 'text-green-700 text-xs ml-2';
+    });
+  });
+}
+
+/* ================= GALLERY (gallery_items) ================= */
+async function loadGallery() {
+  const box = document.getElementById('galleryList');
+  box.innerHTML = 'Loading...';
+  const { data, error } = await supabase.from('gallery_items').select('*').order('sort_order');
+  if (error) { box.innerHTML = `<p class="text-red-600">${escapeHtml(error.message)}</p>`; return; }
+  box.innerHTML = data.map((item) => rowCard('gallery', item, item.title, item.badge)).join('') || '<p class="text-gray-500">No items yet — add your first Community Action Showcase photo.</p>';
+  bindRowActions('gallery');
+}
+document.getElementById('newGalleryBtn').addEventListener('click', () => openModal('gallery', null));
+
+/* ================= ARTICLES (blog) ================= */
+async function loadArticles() {
+  const box = document.getElementById('articlesList');
+  box.innerHTML = 'Loading...';
+  const { data, error } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
+  if (error) { box.innerHTML = `<p class="text-red-600">${escapeHtml(error.message)}</p>`; return; }
+  box.innerHTML = data.map((item) => rowCard('articles', item, item.title, item.published ? 'published' : 'unpublished')).join('') || '<p class="text-gray-500">No articles yet.</p>';
+  bindRowActions('articles');
+}
+document.getElementById('newArticleBtn').addEventListener('click', () => openModal('articles', null));
+
+/* ================= MEDIA LIBRARY ================= */
+async function loadMedia() {
+  const grid = document.getElementById('mediaGrid');
+  grid.innerHTML = 'Loading...';
+  const { data, error } = await supabase.from('media_library').select('*').order('created_at', { ascending: false });
+  if (error) { grid.innerHTML = `<p class="text-red-600">${escapeHtml(error.message)}</p>`; return; }
+  grid.innerHTML = data.map((m) => `
+    <div class="bg-white rounded-xl shadow-sm p-2">
+      <img src="${escapeHtml(m.public_url)}" class="w-full h-28 object-cover rounded-lg mb-2" loading="lazy">
+      <p class="text-[11px] text-gray-500 break-all">${escapeHtml(m.file_path)}</p>
+      <button class="copyPathBtn text-xs text-brand-green font-semibold mt-1" data-path="${escapeHtml(m.file_path)}">Copy path</button>
+    </div>
+  `).join('') || '<p class="text-gray-500 col-span-4">No uploads yet.</p>';
+  grid.querySelectorAll('.copyPathBtn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      navigator.clipboard?.writeText(btn.dataset.path);
+      btn.textContent = 'Copied!';
+      setTimeout(() => (btn.textContent = 'Copy path'), 1200);
+    });
+  });
+}
+
+document.getElementById('mediaUploadInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    await uploadFile(file, 'library');
+    loadMedia();
+  } catch (err) {
+    alert('Upload failed: ' + err.message);
+  }
+  e.target.value = '';
+});
+
+/* ================= SHARED: row card + modal editor ================= */
+function rowCard(type, item, title, subtitle) {
+  return `
+    <div class="bg-white rounded-xl shadow-sm p-4 flex justify-between items-center gap-3">
+      <div class="min-w-0">
+        <p class="font-bold truncate">${escapeHtml(title || '(untitled)')}</p>
+        <p class="text-xs text-gray-500 truncate">${escapeHtml(subtitle || '')}</p>
+      </div>
+      <div class="flex gap-2 shrink-0">
+        <button class="editBtn text-sm px-3 py-1.5 rounded-lg border" data-type="${type}" data-id="${item.id}">Edit</button>
+        <button class="deleteBtn text-sm px-3 py-1.5 rounded-lg border border-red-300 text-red-600" data-type="${type}" data-id="${item.id}">Delete</button>
+      </div>
+    </div>`;
+}
+
+const TABLE_MAP = { gallery: 'gallery_items', articles: 'articles' };
+const RELOAD_MAP = { gallery: loadGallery, articles: loadArticles };
+// Which column holds the image reference, and whether it's a raw Storage
+// path (gallery_items.image_path) or a full public URL (articles.image_url).
+const IMAGE_FIELD_MAP = {
+  gallery: { column: 'image_path', isUrl: false },
+  articles: { column: 'image_url', isUrl: true },
+};
+
+// Convert either a Storage path or a full public URL (from the "media"
+// bucket) back into the path Storage.remove() needs.
+function storagePathFromValue(value, isUrl) {
+  if (!value) return null;
+  if (!isUrl) return value;
+  const marker = `/storage/v1/object/public/${MEDIA_BUCKET}/`;
+  const idx = value.indexOf(marker);
+  return idx === -1 ? null : decodeURIComponent(value.slice(idx + marker.length));
+}
+
+async function deleteStorageImageFor(type, item) {
+  const fieldInfo = IMAGE_FIELD_MAP[type];
+  if (!fieldInfo) return;
+  const path = storagePathFromValue(item[fieldInfo.column], fieldInfo.isUrl);
+  if (!path) return;
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).remove([path]);
+  if (error) console.warn('Storage cleanup failed for', path, error.message);
+  // Best-effort: also drop the media_library tracking row, if one exists.
+  await supabase.from('media_library').delete().eq('file_path', path);
+}
+
+function bindRowActions(type) {
+  document.querySelectorAll(`.editBtn[data-type="${type}"]`).forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const { data } = await supabase.from(TABLE_MAP[type]).select('*').eq('id', btn.dataset.id).maybeSingle();
+      openModal(type, data);
+    });
+  });
+  document.querySelectorAll(`.deleteBtn[data-type="${type}"]`).forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('Delete this item? Its image will also be removed from Storage.')) return;
+      const { data: item } = await supabase.from(TABLE_MAP[type]).select('*').eq('id', btn.dataset.id).maybeSingle();
+      const { error } = await supabase.from(TABLE_MAP[type]).delete().eq('id', btn.dataset.id);
+      if (error) { alert('Delete failed: ' + error.message); return; }
+      if (item) await deleteStorageImageFor(type, item);
+      RELOAD_MAP[type]();
+    });
+  });
+}
+
+const modal = document.getElementById('modal');
+const modalBody = document.getElementById('modalBody');
+let modalType = null;
+let modalItem = null;
+
+const FORM_FIELDS = {
+  gallery: [
+    { key: 'badge', label: 'Badge (e.g. "01. Book Fair")', type: 'text' },
+    { key: 'title', label: 'Title', type: 'text' },
+    { key: 'description', label: 'Description', type: 'textarea' },
+    { key: 'location', label: 'Location', type: 'text' },
+    { key: 'sort_order', label: 'Sort order (number)', type: 'number' },
+    { key: 'image', label: 'Image', type: 'image' },
+    { key: 'is_active', label: 'Active (shown on public site)', type: 'checkbox' },
+  ],
+  articles: [
+    { key: 'title', label: 'Title', type: 'text' },
+    { key: 'slug', label: 'Slug (url-friendly, unique)', type: 'text' },
+    { key: 'excerpt', label: 'Excerpt', type: 'textarea' },
+    { key: 'content', label: 'Content', type: 'textarea' },
+    { key: 'category', label: 'Category', type: 'select', options: ['leadership', 'innovation', 'community'] },
+    { key: 'author', label: 'Author', type: 'text' },
+    { key: 'image', label: 'Image', type: 'image', urlField: 'image_url' },
+    { key: 'published', label: 'Published (visible on public site)', type: 'checkbox' },
+  ],
+};
+
+function openModal(type, item) {
+  modalType = type;
+  modalItem = item || {};
+  document.getElementById('modalTitle').textContent = item ? 'Edit item' : 'New item';
+  const isNewItem = !item || !item.id;
+  modalBody.innerHTML = FORM_FIELDS[type].map((f) => {
+    const val = modalItem[f.key] ?? '';
+    if (f.type === 'textarea') return `<div><label class="block text-sm font-semibold mb-1">${f.label}</label><textarea id="f_${f.key}" rows="3" class="w-full px-3 py-2 border rounded-lg">${escapeHtml(val)}</textarea></div>`;
+    if (f.type === 'checkbox') {
+      // New items default to checked (visible) so they aren't silently hidden.
+      const checked = isNewItem ? true : !!val;
+      return `<div class="flex items-center gap-2"><input type="checkbox" id="f_${f.key}" ${checked ? 'checked' : ''}><label class="text-sm font-semibold">${f.label}</label></div>`;
+    }
+    if (f.type === 'select') {
+      const current = val || f.options[0];
+      const opts = f.options.map((o) => `<option value="${escapeHtml(o)}" ${o === current ? 'selected' : ''}>${escapeHtml(o)}</option>`).join('');
+      return `<div><label class="block text-sm font-semibold mb-1">${f.label}</label><select id="f_${f.key}" class="w-full px-3 py-2 border rounded-lg bg-white">${opts}</select></div>`;
+    }
+    if (f.type === 'image') {
+      const urlField = f.urlField || 'image_path';
+      const currentUrl = modalItem[urlField];
+      const preview = currentUrl
+        ? (urlField === 'image_url' ? `<img src="${escapeHtml(currentUrl)}" class="h-24 rounded-lg mb-2 border">` : `<img src="${publicUrl(currentUrl)}" class="h-24 rounded-lg mb-2 border">`)
+        : '';
+      return `<div><label class="block text-sm font-semibold mb-1">${f.label}</label>${preview}<input type="file" id="f_image_file" accept="image/*" class="text-sm"></div>`;
+    }
+    return `<div><label class="block text-sm font-semibold mb-1">${f.label}</label><input id="f_${f.key}" type="${f.type}" class="w-full px-3 py-2 border rounded-lg" value="${escapeHtml(val)}"></div>`;
+  }).join('');
+  modal.classList.remove('hidden');
+}
+
+document.getElementById('modalCancel').addEventListener('click', () => modal.classList.add('hidden'));
+
+document.getElementById('modalSave').addEventListener('click', async () => {
+  const fields = FORM_FIELDS[modalType];
+  const payload = {};
+  let imageField = 'image_path';
+  for (const f of fields) {
+    if (f.type === 'image') { imageField = f.urlField || 'image_path'; continue; }
+    const el = document.getElementById('f_' + f.key);
+    if (f.type === 'checkbox') payload[f.key] = el.checked;
+    else if (f.type === 'number') payload[f.key] = el.value ? Number(el.value) : 0;
+    else payload[f.key] = el.value;
+  }
+  const fileInput = document.getElementById('f_image_file');
+  let oldImagePath = null;
+  if (fileInput && fileInput.files[0]) {
+    try {
+      // Remember the old image so we can delete it AFTER the new one is
+      // confirmed saved (never delete-before-replace-succeeds).
+      const fieldInfo = IMAGE_FIELD_MAP[modalType];
+      if (fieldInfo && modalItem[fieldInfo.column]) {
+        oldImagePath = storagePathFromValue(modalItem[fieldInfo.column], fieldInfo.isUrl);
+      }
+      const folder = modalType === 'gallery' ? 'gallery' : 'articles';
+      const path = await uploadFile(fileInput.files[0], folder);
+      payload[imageField] = imageField === 'image_url' ? publicUrl(path) : path;
+    } catch (err) { alert('Image upload failed: ' + err.message); return; }
+  }
+  const table = TABLE_MAP[modalType];
+  let error;
+  if (modalItem && modalItem.id) {
+    ({ error } = await supabase.from(table).update(payload).eq('id', modalItem.id));
+  } else {
+    ({ error } = await supabase.from(table).insert(payload));
+  }
+  if (error) { alert(error.message); return; }
+  // Only now that the DB row is confirmed pointing at the NEW image do we
+  // remove the old one — avoids ever losing an image if the save had failed.
+  if (oldImagePath) {
+    const { error: rmErr } = await supabase.storage.from(MEDIA_BUCKET).remove([oldImagePath]);
+    if (rmErr) console.warn('Old image cleanup failed:', rmErr.message);
+    else await supabase.from('media_library').delete().eq('file_path', oldImagePath);
+  }
+  modal.classList.add('hidden');
+  RELOAD_MAP[modalType]();
+});
+</script>
+</body>
+</html>
